@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Opening Obsidian...</title>
+</head>
+<body>
+    <p>Obsidianを起動しています...</p>
+    <script>
+        // URLパラメータを取得 (?vault=MyVault&file=MyNote)
+        const params = new URLSearchParams(window.location.search);
+        const vault = params.get('vault');
+        const file = params.get('file');
+
+        if (vault && file) {
+            // Obsidian URI を構築
+            const obsidianUri = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(file)}`;
+            
+            // リダイレクト実行
+            window.location.href = obsidianUri;
+
+            // 1秒後にこのタブを閉じる（ブラウザの設定により閉じない場合もあります）
+            setTimeout(() => {
+                window.close();
+            }, 1000);
+        } else {
+            document.body.innerHTML = "<p>エラー: vault名またはファイル名が指定されていません。</p>";
+        }
+    </script>
+</body>
+</html>
