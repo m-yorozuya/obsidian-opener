@@ -11,21 +11,31 @@
         const vault = params.get('vault');
         const file = params.get('file');
         const mode = params.get('mode');
-        const template = params.get('template'); // テンプレート名（任意）
+        const template = params.get('template');
+        const trelloUrl = params.get('trello_url'); // TrelloのURLを取得
 
         if (vault && file) {
-            let advancedUri;
             const encodedVault = encodeURIComponent(vault);
             const encodedFile = encodeURIComponent(file);
+            let advancedUri;
 
             if (mode === 'new') {
-                // 新規作成時：filepath, mode=new を使用。templateがあれば追加。
-                advancedUri = `obsidian://advanced-uri?vault=${encodedVault}&filepath=${encodedFile}&mode=new`;
+                // 基本の作成URL
+                advancedUri = `obsidian://advanced-uri?vault=${encodedVault}&filepath=${encodedFile}&mode=new&templater=true`;
+
+                // テンプレートの指定があれば追加
                 if (template) {
                     advancedUri += `&template=${encodeURIComponent(template)}&templater=true`;
                 }
+
+                // TrelloのURLがあれば frontmatter パラメータとして追加
+                if (trelloUrl) {
+                    // JSON形式でプロパティを指定する
+                    const fm = JSON.stringify({ "Trello": trelloUrl });
+                    advancedUri += `&frontmatter=${encodeURIComponent(fm)}`;
+                }
             } else {
-                // 開くとき
+                // オープンモード
                 advancedUri = `obsidian://advanced-uri?vault=${encodedVault}&filepath=${encodedFile}`;
             }
             
