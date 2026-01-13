@@ -2,29 +2,35 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Opening Obsidian...</title>
+    <title>Redirecting to Obsidian...</title>
 </head>
 <body>
-    <p>Obsidianを起動しています...</p>
+    <p id="message">Obsidianを呼び出しています...</p>
     <script>
-        // URLパラメータを取得 (?vault=MyVault&file=MyNote)
         const params = new URLSearchParams(window.location.search);
         const vault = params.get('vault');
         const file = params.get('file');
+        const mode = params.get('mode'); // 'new' か 'open' かを指定
 
         if (vault && file) {
-            // Obsidian URI を構築
-            const obsidianUri = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(file)}`;
+            let obsidianUri;
+
+            if (mode === 'new') {
+                // 新規作成モード：特定のフォルダ（例: Inbox）に作成し、中身にタイトルを入れる設定
+                // folderパラメータを追加すれば特定のフォルダ内に作成可能です
+                obsidianUri = `obsidian://new?vault=${encodeURIComponent(vault)}&folder=inbox&name=${encodeURIComponent(file)}&content=${encodeURIComponent("# " + file)}`;
+            } else {
+                // 通常のオープンモード
+                obsidianUri = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(file)}`;
+            }
             
-            // リダイレクト実行
             window.location.href = obsidianUri;
 
-            // 1秒後にこのタブを閉じる（ブラウザの設定により閉じない場合もあります）
             setTimeout(() => {
                 window.close();
-            }, 1000);
+            }, 1500);
         } else {
-            document.body.innerHTML = "<p>エラー: vault名またはファイル名が指定されていません。</p>";
+            document.getElementById('message').innerText = "エラー: パラメータ（vault, file）が足りません。";
         }
     </script>
 </body>
