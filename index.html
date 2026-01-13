@@ -18,7 +18,7 @@
             if (mode === 'new') {
                 // 新規作成モード：特定のフォルダ（例: Inbox）に作成し、中身にタイトルを入れる設定
                 // folderパラメータを追加すれば特定のフォルダ内に作成可能です
-                obsidianUri = `obsidian://new?vault=${encodeURIComponent(vault)}&folder=inbox&name=${encodeURIComponent(file)}&content=${encodeURIComponent("# " + file)}`;
+                obsidianUri = `obsidian://new?vault=${encodeURIComponent(vault)}&folder=inbox&name=${encodeURIComponent(file)}`;
             } else {
                 // 通常のオープンモード
                 obsidianUri = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(file)}`;
