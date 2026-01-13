@@ -10,27 +10,27 @@
         const params = new URLSearchParams(window.location.search);
         const vault = params.get('vault');
         const file = params.get('file');
-        const mode = params.get('mode'); // 'new' か 'open' かを指定
+        const mode = params.get('mode');
+        const template = params.get('template'); // テンプレート名（任意）
 
         if (vault && file) {
-            let obsidianUri;
+            let advancedUri;
+            const encodedVault = encodeURIComponent(vault);
+            const encodedFile = encodeURIComponent(file);
 
             if (mode === 'new') {
-                // 新規作成モード：特定のフォルダ（例: Inbox）に作成し、中身にタイトルを入れる設定
-                // folderパラメータを追加すれば特定のフォルダ内に作成可能です
-                obsidianUri = `obsidian://new?vault=${encodeURIComponent(vault)}&folder=inbox&name=${encodeURIComponent(file)}`;
+                // 新規作成時：filepath, mode=new を使用。templateがあれば追加。
+                advancedUri = `obsidian://advanced-uri?vault=${encodedVault}&filepath=${encodedFile}&mode=new`;
+                if (template) {
+                    advancedUri += `&template=${encodeURIComponent(template)}&templater=true`;
+                }
             } else {
-                // 通常のオープンモード
-                obsidianUri = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(file)}`;
+                // 開くとき
+                advancedUri = `obsidian://advanced-uri?vault=${encodedVault}&filepath=${encodedFile}`;
             }
             
-            window.location.href = obsidianUri;
-
-            setTimeout(() => {
-                window.close();
-            }, 1500);
-        } else {
-            document.getElementById('message').innerText = "エラー: パラメータ（vault, file）が足りません。";
+            window.location.href = advancedUri;
+            setTimeout(() => window.close(), 1500);
         }
     </script>
 </body>
