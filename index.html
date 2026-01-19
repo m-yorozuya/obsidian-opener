@@ -11,8 +11,16 @@
         const vault = params.get('vault');
         const file = params.get('file');
         const mode = params.get('mode');
-        // const template = params.get('template');
         const trelloUrl = params.get('trello_url'); // TrelloのURLを取得
+        const titleMap = {
+            'new': 'Obsidian Create',
+            'overwrite': 'Obsidian Add Link',
+            'open': 'Obsidian Open'
+        };
+
+        if (mode && titleMap[mode]) {
+            document.title = titleMap[mode];
+        }
 
         if (vault && file) {
             const encodedVault = encodeURIComponent(vault);
